@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Bartlomiej_Kregielewski_Wtorek14</string>
+
+    <string name="buttonNumeric1">1</string>
+    <string name="buttonNumeric2">2</string>
+    <string name="buttonNumeric3">3</string>
+    <string name="buttonNumeric4">4</string>
+    <string name="buttonNumeric5">5</string>
+    <string name="buttonNumeric6">6</string>
+    <string name="buttonNumeric7">7</string>
+    <string name="buttonNumeric8">8</string>
+    <string name="buttonNumeric9">9</string>
+    <string name="buttonNumeric0">0</string>
+
+    <string name="buttonAddition">+</string>
+    <string name="buttonSubtraction">-</string>
+    <string name="buttonMultiplication">×</string>
+    <string name="buttonDivision">÷</string>
+    <string name="buttonRoot">√</string>
+    <string name="buttonPercent">%</string>
+    <string name="buttonDot">.</string>
+    <string name="buttonEquals">=</string>
+    <string name="buttonClear">C</string>
+</resources>
