@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ExchangeRateCalculatorActivity">
+
+    <TextView
+            android:text="@string/exchange_rate_calculator_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/exchangeRateCalculatorTitleTextView"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.497" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="36dp"/>
+    <TextView
+            android:text="@string/pln"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/plnCodeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/exchangeRateCalculatorTitleTextView"
+            android:layout_marginTop="40dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/plnEditTextNumber"
+            app:layout_constraintTop_toBottomOf="@+id/plnCodeTextView" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="16dp"
+            android:inputType="numberDecimal" android:imeOptions="actionDone" android:importantForAutofill="no"/>
+    <Spinner
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" android:id="@+id/otherCurrencySpinner"
+            app:layout_constraintTop_toBottomOf="@+id/plnEditTextNumber" android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:id="@+id/otherCurrencyEditTextNumber"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/otherCurrencySpinner" android:layout_marginTop="16dp"
+            android:inputType="numberDecimal" android:imeOptions="actionDone" android:importantForAutofill="no"/>
+    <Button
+            android:text="@string/conver_pln_to_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/convertPlnButton"
+            app:layout_constraintTop_toBottomOf="@+id/otherCurrencyEditTextNumber" android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"/>
+    <Button
+            android:text="@string/convert_other_to_pln"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/convertOtherButton"
+            app:layout_constraintTop_toBottomOf="@+id/otherCurrencyEditTextNumber"
+            android:layout_marginTop="40dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

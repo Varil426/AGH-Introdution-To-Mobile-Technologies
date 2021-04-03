@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Bartlomiej_Kregielewski_Wtorek14</string>
+    <string name="previousMidText">Previous:</string>
+    <string name="currentMidText">Current:</string>
+    <string name="chartShowWeek">Show last week\'s data</string>
+    <string name="chartShowMonth">Show last month\'s data</string>
+    <string name="goldDetailsTitle">Gold</string>
+    <string name="exchange_rate_calculator_title">Exchange Rate Calculator</string>
+    <string name="conver_pln_to_other">Convert PLN to %s</string>
+    <string name="convert_other_to_pln">Convert %s to PLN</string>
+    <string name="pln">PLN</string>
+    <string name="app_title">Awesome Currency App</string>
+    <string name="currencies_menu_text">Currencies</string>
+    <string name="exchange_calculator_menu_text">Exchange Calculator</string>
+    <string name="gold_menu_text">Gold</string>
+    <string name="arrow_indicator_content_description">Arrow Indicator</string>
+</resources>
