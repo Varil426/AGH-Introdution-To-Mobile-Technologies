@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import org.json.JSONObject
 import java.lang.Exception
+import java.sql.Time
 import java.time.LocalDate
 import java.time.temporal.ChronoField
 import java.util.*
@@ -26,7 +27,8 @@ class CurrencyDetailsActivity : ApiActivity() {
     private lateinit var currencyDetailsChart: LineChart
     private lateinit var switchCurrencyDataButton: Button
 
-    private var loadedData = DataLoadedEnum.MONTH
+    private var loadedData = DataLoadedEnum.WEEK
+    private val entries = mutableListOf<Entry>()
 
     private enum class DataLoadedEnum(val days: Int) {
         WEEK(7),
@@ -50,54 +52,28 @@ class CurrencyDetailsActivity : ApiActivity() {
         ApiHelper.InitializeChart(currencyDetailsChart)
         switchCurrencyDataButton.setOnClickListener { ChangeChartData() }
 
-        CurrencyLastValuesRequest(2)
-        ChangeChartData()
+        val maxEnum = DataLoadedEnum.values().maxByOrNull { value -> value.days } ?: DataLoadedEnum.WEEK
+        GetChartDataRequest(maxEnum)
     }
 
-    private fun ChangeChartData() {
-        when (loadedData) {
-            DataLoadedEnum.WEEK -> {
-                CurrencyDataRequest(DataLoadedEnum.MONTH.days)
-                loadedData = DataLoadedEnum.MONTH
-                switchCurrencyDataButton.text = getString(R.string.chartShowWeek)
-            }
-            DataLoadedEnum.MONTH -> {
-                CurrencyDataRequest(DataLoadedEnum.WEEK.days)
-                loadedData = DataLoadedEnum.WEEK
-                switchCurrencyDataButton.text = getString(R.string.chartShowMonth)
-            }
-        }
-    }
-
-    private fun LoadLastTwoValues(response: JSONObject) {
-        val rates = response.getJSONArray("rates")
-        if (rates.length() >= 2) {
-            try {
-                val previousValue = rates.getJSONObject(0).getString("mid")
-                val currentValue = rates.getJSONObject(1).getString("mid")
-                previousMidTextView.text = "${getString(R.string.previousMidText)} $previousValue"
-                currentMidTextView.text = "${getString(R.string.currentMidText)} $currentValue"
-            } catch(e: Exception) {
-                ApiHelper.ToastError(e.message, this)
-            }
-        }
-    }
-
-    private fun CurrencyLastValuesRequest(last: Int) {
-        val requestUrl = "${ApiHelper.baseUrl}/api/exchangerates/rates/$table/$currencyCode/last/$last/?${ApiHelper.formatJson}"
+    private fun GetChartDataRequest(TimePeriod: DataLoadedEnum) {
+        val calendar = Calendar.getInstance()
+        val endDate = calendar.time
+        calendar.add(Calendar.DAY_OF_YEAR, -TimePeriod.days)
+        val startDate = calendar.time
+        val requestUrl = "${ApiHelper.baseUrl}/api/exchangerates/rates/$table/$currencyCode/${ApiHelper.dateFormat.format(startDate)}/${ApiHelper.dateFormat.format(endDate)}/?${ApiHelper.formatJson}"
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET,
             requestUrl,
             null,
-            { response -> LoadLastTwoValues(response) },
+            { response -> LoadChartData(response, TimePeriod) },
             { error -> ApiHelper.ToastError(error.toString(), this) }
         )
         queue.add(jsonObjectRequest)
     }
 
-    private fun LoadCurrencyData(response: JSONObject) {
+    private fun LoadChartData(response: JSONObject, TimePeriod: DataLoadedEnum) {
         val rates = response.getJSONArray("rates")
-        val entries = mutableListOf<Entry>()
         try {
             for (rateIndex in 0 until rates.length()) {
                 val currentObject = rates.getJSONObject(rateIndex)
@@ -106,27 +82,43 @@ class CurrencyDetailsActivity : ApiActivity() {
 
                 entries.add(Entry(date, mid.toFloat()))
             }
-            val dataSet = LineDataSet(entries, currencyCode)
-            currencyDetailsChart.data = LineData(dataSet)
-            currencyDetailsChart.invalidate()
+
+            loadedData = TimePeriod
+
+            if (entries.size >= 2) {
+                val previousValue = entries.reversed()[1].y
+                val currentValue = entries.last().y
+                previousMidTextView.text = "${getString(R.string.previousMidText)} $previousValue"
+                currentMidTextView.text = "${getString(R.string.currentMidText)} $currentValue"
+            }
+
+            ChangeChartData()
         } catch(e: Exception) {
             ApiHelper.ToastError(e.message, this)
         }
     }
 
-    private fun CurrencyDataRequest(days: Int) {
-        val calendar = Calendar.getInstance()
-        val endDate = calendar.time
-        calendar.add(Calendar.DAY_OF_YEAR, -days)
-        val startDate = calendar.time
-        val requestUrl = "${ApiHelper.baseUrl}/api/exchangerates/rates/$table/$currencyCode/${ApiHelper.dateFormat.format(startDate)}/${ApiHelper.dateFormat.format(endDate)}/?${ApiHelper.formatJson}"
-        val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.GET,
-            requestUrl,
-            null,
-            { response -> LoadCurrencyData(response) },
-            { error -> ApiHelper.ToastError(error.toString(), this) }
-        )
-        queue.add(jsonObjectRequest)
+    private fun UpdateChart(TimePeriod: DataLoadedEnum) {
+        val startDate = Calendar.getInstance()
+        startDate.add(Calendar.DAY_OF_YEAR, -TimePeriod.days)
+        val dateAsFloat = ApiHelper.DateStringToFloat(ApiHelper.dateFormat.format(startDate.time))
+        val dataSet = LineDataSet(entries.filter { entry -> entry.x >= dateAsFloat }, currencyCode)
+        currencyDetailsChart.data = LineData(dataSet)
+        currencyDetailsChart.invalidate()
+    }
+
+    private fun ChangeChartData() {
+        switchCurrencyDataButton.text = getString(R.string.chartShowLastDaysButton).format(loadedData.days)
+
+        when (loadedData) {
+            DataLoadedEnum.WEEK -> {
+                UpdateChart(DataLoadedEnum.MONTH)
+                loadedData = DataLoadedEnum.MONTH
+            }
+            DataLoadedEnum.MONTH -> {
+                UpdateChart(DataLoadedEnum.WEEK)
+                loadedData = DataLoadedEnum.WEEK
+            }
+        }
     }
 }

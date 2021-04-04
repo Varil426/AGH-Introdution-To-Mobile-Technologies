@@ -2,8 +2,7 @@
     <string name="app_name">Bartlomiej_Kregielewski_Wtorek14</string>
     <string name="previousMidText">Previous:</string>
     <string name="currentMidText">Current:</string>
-    <string name="chartShowWeek">Show last week\'s data</string>
-    <string name="chartShowMonth">Show last month\'s data</string>
+    <string name="chartShowLastDaysButton">Show last %d days\ data</string>
     <string name="goldDetailsTitle">Gold</string>
     <string name="exchange_rate_calculator_title">Exchange Rate Calculator</string>
     <string name="conver_pln_to_other">Convert PLN to %s</string>

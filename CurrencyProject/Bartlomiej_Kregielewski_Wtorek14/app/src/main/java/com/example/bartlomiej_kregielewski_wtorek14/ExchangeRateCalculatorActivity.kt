@@ -101,7 +101,6 @@ class ExchangeRateCalculatorActivity : ApiActivity() {
         }
     }
 
-
     private fun currenciesGetRequest(table: ApiHelper.CurrenciesTables) {
         val requestUrl = "${ApiHelper.baseUrl}/api/exchangerates/tables/$table/?${ApiHelper.formatJson}"
         val jsonArrayRequest = JsonArrayRequest(
